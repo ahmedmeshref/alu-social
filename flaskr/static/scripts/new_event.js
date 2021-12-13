@@ -64,7 +64,7 @@ function write_post(res_val) {
                     </div>
                     <div class=".col-sm-">
                         <div class="container">
-                            <button class="btn btn-outline-danger border-0 mb-1 mt-0 p-1 font-weight-bold" type="submit" onclick="delete_event('{{ event.id }}')">
+                            <button class="btn btn-outline-danger border-0 mb-1 mt-0 p-1 font-weight-bold" type="submit" onclick="delete_event('${res_val["id"]}')">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </button>
                         </div>

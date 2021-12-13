@@ -8,12 +8,12 @@ from flask_login import UserMixin
 class User(UserMixin, db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    profile_image = db.Column(db.String(100), nullable=False, default='my_profile.png')
-    email = db.Column(db.String(100), unique=True, nullable=False)
+    username = db.Column(db.String(200), unique=True, nullable=False)
+    profile_image = db.Column(db.String(200), nullable=False, default='my_profile.png')
+    email = db.Column(db.String(200), unique=True, nullable=False)
     # we hash the user password to a 60 string long
-    password = db.Column(db.String(60), nullable=False)
-    job_title = db.Column(db.String(60))
+    password = db.Column(db.String(200), nullable=False)
+    job_title = db.Column(db.String(200))
     interests = db.Column(db.Text)
     campus_id = db.Column(db.Integer, db.ForeignKey('campus.id'))
     major_id = db.Column(db.Integer, db.ForeignKey('major.id'))
@@ -26,14 +26,14 @@ class User(UserMixin, db.Model):
 class Group(db.Model):
     __tablename__ = "group"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(200), nullable=False)
     users = db.relationship("User", backref="group")
 
 
 class Campus(db.Model):
     __tablename__ = "campus"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(200), nullable=False)
     majors = db.relationship('Major', backref='author', lazy=True)
     users = db.relationship("User", backref="campus")
 
@@ -41,7 +41,7 @@ class Campus(db.Model):
 class Major(db.Model):
     __tablename__ = "major"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(200), nullable=False)
     campus_id = db.Column(db.Integer, db.ForeignKey('campus.id'), nullable=False) 
     users = db.relationship("User", backref="major")
 
@@ -70,7 +70,7 @@ Implement Chat
 https://www.youtube.com/watch?v=uJC8A_7VZOA&ab_channel=IndianPythonista
 
 from flaskr import db, app
-from flaskr.model import Group, Campus, Major
+from flaskr.model import User, Group, Campus, Major
 ---
 alu = Campus(name='ALU')
 alc = Campus(name='ALC')

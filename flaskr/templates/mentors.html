@@ -3,7 +3,7 @@
 <div class="main">
     <div class="card-group" style="width: 95%;">
         {% for user in users%}
-        <div class="card mentor-card" style="width: 100px;">
+        <div class="card mentor-card" style="max-width: 30%;">
             <img class="card-img-top" src="{{ url_for('static', filename='images/person.jpg')}}" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">{{ user.username }}</h5>

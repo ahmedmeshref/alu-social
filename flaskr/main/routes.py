@@ -22,7 +22,7 @@ def index():
 
 
 @main.get("/home")
-# @login_required
+@login_required
 def home():
     # get the current page, and put a default value of 1
     events = Event.query.order_by(desc(Event.date)).all()
@@ -30,6 +30,7 @@ def home():
 
 
 @main.get("/mentors")
+@login_required
 def view_mentors():
     user = User.query.all()
     return render_template("mentors.html", users=user, active='mentor')
@@ -78,13 +79,6 @@ def logout():
     return redirect(url_for("main.index"))
 
 
-@login_manager.unauthorized_handler
-def unauthorized():
-    flash("You are not authorized to access the content!", "danger")
-    logout_user()
-    return redirect(url_for("main.login"))
-
-
 @main.post("/events/add")
 @login_required
 def new_event():
@@ -111,6 +105,7 @@ def new_event():
 
 
 @main.route("/events")
+@login_required
 def show_events():
     events = Event.query.order_by(desc(Event.date)).all()
     return render_template('show_events.html', events=events, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -140,9 +135,63 @@ def delete_post():
     return data
 
 
-
 @main.route("/jobs")
+@login_required
 def show_jobs():
     jobs = Job.query.order_by(desc(Job.deadline)).all()
-    return render_template('show_jobs.html', jobs=jobs, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                           datetime=datetime, active='jobs')
+    return render_template('show_jobs.html', jobs=jobs, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"), active='jobs')
+
+
+@main.post("/jobs/add")
+@login_required
+def new_job():
+    title = request.get_json()['title']
+    description = request.get_json()['description']
+    app_link = request.get_json()['application_link']
+    deadline = datetime.strptime(request.get_json()['deadline'], '20%y-%m-%d')
+
+    try:
+        job = Job(title=title, content=description,
+                  author=current_user, deadline=deadline, application_link=app_link)
+        db.session.add(job)
+        db.session.commit()
+        return jsonify({
+            'id': job.id,
+            'title': job.title,
+            'description': job.content,
+            'deadline': job.deadline,
+            'application_link': job.application_link,
+            'username': job.author.username,
+            'author_id': job.author.id
+        })
+    except:
+        db.rollback()
+        flash("Couldn't add job", "danger")
+
+def validate_job(job_id):
+    # check if post exists or not
+    job = Job.query.get_or_404(job_id)
+    # check if current user is the author or the current user is an admin and the author is an end user
+    if job.author == current_user:
+        return job
+    abort(403)
+
+@main.route("/jobs/delete", methods=['POST'])
+@login_required
+def delete_job():
+    job_id = request.get_json()['job_id']
+    job = validate_job(job_id)
+    data = jsonify({
+        'job_id': job.id,
+        'title': job.title
+    })
+    db.session.delete(job)
+    db.session.commit()
+    return data
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    flash("You are not authorized to access the content!", "danger")
+    logout_user()
+    return redirect(url_for("main.index"))
