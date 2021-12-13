@@ -1,0 +1,23 @@
+{% extends 'base_template.html' %}
+{% block content %}
+<div class="main">
+    <div class="card-group" style="width: 95%;">
+        {% for user in users%}
+        <div class="card mentor-card" style="width: 100px;">
+            <img class="card-img-top" src="{{ url_for('static', filename='images/person.jpg')}}" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{ user.username }}</h5>
+                <p class="card-text">
+                    <i class="fa  fa-briefcase" aria-hidden="true" style="margin-right: 5px;"></i>
+                    {{ user.major.name }}
+                </p>
+                <p class="card-text"><small class="text-muted">
+                        <i class="fa  fa-university" aria-hidden="true" style="margin-right: 5px;"></i>
+                        {{ user.campus.name }}</small>
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home_style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'>
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title> ALU Social </title>
+    {% endif %}
+</head>
+
+<body>
+    <div class="sidebar">
+        <header>
+            <a class="logo" href="{{ url_for('main.home') }}">
+                <img src="{{ url_for('static', filename='icon/alu_logo.png')}}" alt="ALU" height="28px">
+            </a>
+        </header>
+        <div class="items-holder">
+            <ul onclick="changeActive(event)">
+                <li>
+                    <a href="#">
+                        <i style="font-size:24px" class="fa">&#xf075;</i>
+                        <span>Messages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://calendar.google.com/calendar/r" target="_blank">
+                        <i style="font-size:24px" class="fa">&#xf073;</i>
+                        <span>Calendar</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i style="font-size:24px" class="fa">&#xf0c0;</i>
+                        <span>Groups</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('main.view_mentors') }}" class="{% if active == 'mentor' %} active {% endif %}">
+                        <i style="font-size:24px" class="fa">&#xf21a;</i>
+                        <span>Mentors</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('main.show_events') }}" class="{% if active == 'events' %} active {% endif %}">
+                        <i class="material-icons">&#xe878;</i>
+                        <span>Events</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i style="font-size:24px" class="fa">&#xf0ea;</i>
+                        <span>Job Posting</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="material-icons">&#xe7fc;</i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('main.logout') }}" style="margin-top: 95%;">
+                        <i style="font-size:24px" class="fa">&#xf08b;</i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js'></script>
+    <script src="{{ url_for('static', filename='scripts/change_active.js') }}"></script>
+</body>
+
+</html>

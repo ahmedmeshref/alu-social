@@ -1,0 +1,66 @@
+{% extends 'base_template.html' %}
+{% block content %}
+<div class="main">
+    <div class="content-section text-dark new_post_container">
+        <form id="new_event" style="text-align: center; margin-left: auto; margin-right: auto;">
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4 text-lg">New Event</legend>
+                <div class="form-group">
+                    <input type="text" class="form-control form-control-md" placeholder="Title" name="title" id="title"
+                        required autofocus>
+                    <div class="invalid-feedback" id="invalid_title"></div>
+                </div>
+                <div class="md-form" style="margin-bottom: 15px;">
+                    <input type="date" class="form-control form-control-md" name="date" id="date">
+                    <div class="invalid-feedback" id="invalid_description"></div>
+                </div>
+                <div class="md-form">
+                    <textarea id="description" class="md-textarea form-control" rows="3" placeholder="Description"
+                        name="description" required></textarea>
+                    <div class="invalid-feedback" id="invalid_description"></div>
+                </div>
+            </fieldset>
+            <div class="form-group text-center">
+                <button class="btn btn-outline-primary btn btn-block" type="submit"
+                    style="background-color: #120143; color: #fff; font-size: 19px; font-weight: 600;">Add
+                    Event</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="events">
+        <div id="add_new_event"></div>
+        {% for event in events %}
+        <article class="media content-section post_container" id={{ event.id }}>
+            <div class="media-body">
+                <div class="container article-metadata mb-3">
+                    <div class="row mt-1">
+                        <div class="col-sm">
+                            <a class="mr-2" href="">{{ event.author.username }}</a>
+                            <small class="text-muted">
+                                {{ event.date }}
+                            </small>
+                        </div>
+                        <div class=".col-sm-">
+                            <div class="container">
+                                {% if (event.author == current_user) %}
+                                <button class="btn btn-outline-danger border-0 mb-1 mt-0 p-1 font-weight-bold"
+                                    type="submit" onclick="delete_event('{{ event.id }}')">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2 class="article-title">{{ event.title }}</h2>
+                <p class="article-content text-dark">{{ event.content }}</p>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='scripts/new_event.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/delete_event.js') }}"></script>
+{% endblock %}

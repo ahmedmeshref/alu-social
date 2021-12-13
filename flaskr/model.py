@@ -1,14 +1,11 @@
 from datetime import datetime
 from flaskr import db
-# from flask_login import UserMixin
+from flask_login import UserMixin
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.query.get(int(user_id))
 
 
 # create a table
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
@@ -21,13 +18,9 @@ class User(db.Model):
     campus_id = db.Column(db.Integer, db.ForeignKey('campus.id'))
     major_id = db.Column(db.Integer, db.ForeignKey('major.id'))
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
-    # education_level_id = db.Column(db.Integer, db.ForeignKey('education_level.id'))
     # relationships
     events = db.relationship('Event', backref='author', lazy=True)
-    # campus = db.relationship("Campus", back_populates="campuses")
-    # major = db.relationship("Major", back_populates="majors")
-    # group = db.relationship("Group", back_populates="groups")
-    # educational_level = db.relationship("EducationLevel", back_populates="education_levels")
+    jobs = db.relationship('Job', backref='author', lazy=True)
 
 
 class Group(db.Model):
@@ -35,13 +28,6 @@ class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     users = db.relationship("User", backref="group")
-
-
-# class EducationLevel(db.Model):
-#     __tablename__ = "education_level"
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(100), nullable=False)
-#     users = db.relationship("User", backref="education_level")
 
 
 class Campus(db.Model):
@@ -66,6 +52,15 @@ class Event(db.Model):
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+class Job(db.Model):
+    __tablename__ = "job"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    deadline = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    application_link = db.Column(db.DateTime, nullable=False, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
