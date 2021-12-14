@@ -25,6 +25,7 @@
         <div class="input-box">
             <i class="fa fa-university"></i>
             <select name="campus" class="options" placeholder='Select Campus' required autofocus>
+                <option value='-1' name='book' class="text-muted">Don't Change</option>
                 {% for campus in campuses %}
                 {% if campus != current_user.campus %}
                 <option value='{{ campus.id }}' name='book'>{{ campus.name }}</option>
@@ -35,6 +36,7 @@
         <div class="input-box">
             <i class="fa fa-graduation-cap"></i>
             <select name="group" class="options" placeholder='Select Group' required autofocus>
+                <option value='-1' name='book' class="text-muted">Don't Change</option>
                 {% for group in groups %}
                 {% if group != current_user.group %}
                 <option value='{{ group.id }}' name='book'>{{ group.name }}</option>
@@ -45,6 +47,7 @@
         <div class="input-box">
             <i class="fa fa-briefcase"></i>
             <select name="major" class="options" placeholder='Select Major' required autofocus>
+                <option value='-1' name='book' class="text-muted">Don't Change</option>
                 {% for major in majors %}
                 {% if major != current_user.major %}
                 <option value='{{ major.id }}' name='book'>{{ major.name }}</option>

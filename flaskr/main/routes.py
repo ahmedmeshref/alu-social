@@ -30,7 +30,7 @@ def index():
 @login_required
 def home():
     # get the current page, and put a default value of 1
-    events = Event.query.order_by(desc(Event.date)).all()
+    events = Event.query.order_by(Event.date).all()
     return render_template("show_events.html", events=events)
 
 
@@ -119,7 +119,7 @@ def new_event():
 @main.route("/events")
 @login_required
 def show_events():
-    events = Event.query.order_by(desc(Event.date)).all()
+    events = Event.query.order_by(Event.date).all()
     return render_template('show_events.html', events=events, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                            datetime=datetime, active='events')
 
@@ -150,7 +150,7 @@ def delete_post():
 @main.route("/jobs")
 @login_required
 def show_jobs():
-    jobs = Job.query.order_by(desc(Job.deadline)).all()
+    jobs = Job.query.order_by(Job.deadline).all()
     return render_template('show_jobs.html', jobs=jobs, now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"), active='jobs')
 
 
@@ -238,9 +238,12 @@ def update_profile():
         major_id = request.form.get("major")
         campus_id = request.form.get("campus")
         user.username = username
-        user.group_id = int(group_id)
-        user.major_id=int(major_id)
-        user.campus_id=int(campus_id)
+        if group_id != "-1":
+            user.group_id = int(group_id)
+        if major_id != "-1":
+            user.major_id=int(major_id)
+        if campus_id != "-1":
+            user.campus_id=int(campus_id)
         db.session.commit()
         return redirect('/home')
 
