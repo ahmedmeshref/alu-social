@@ -1,0 +1,110 @@
+{% extends 'base_template.html' %}
+
+{% block content %}
+<div class="main">
+    <div class="content-section">
+        <div class="media">
+            <img class="rounded-circle account-img mt-2" src="{{ url_for('static', filename='images/profile.png') }}" alt="user_image">
+            <div class="media-body">
+                <h2 class="account-heading mt-4">{{ current_user.username }}</h2>
+                <p class="text-secondary">{{ current_user.email }}</p>
+                {% if user.id == current_user.id %}
+                <div class="d-flex">
+                    <form method="GET" action="{{ url_for('main.update_profile') }}">
+                        <button class="btn btn-primary mr-1" type="submit">Update Profile</button>
+                    </form>
+                    <button type="button" class="btn btn-outline-primary mr-1" data-toggle="modal"
+                        data-target="#deactivateAccount">
+                        Deactivate My Account
+                    </button>
+                    <button class="btn btn-outline-primary" type="" data-toggle="modal"
+                        data-target="#deleteAccount">
+                        Delete My Account
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        {% for event in events %}
+        <article class="media content-section post_container" id={{ event.id }}>
+            <div class="media-body">
+                <div class="container article-metadata mb-3">
+                    <div class="row mt-1">
+                        <div class="col-sm">
+                            <a class="mr-2" href="/profile/{{ event.author.id }}">{{ event.author.username }}</a>
+                            <small class="text-muted">
+                                {{ event.date }}
+                            </small>
+                        </div>
+                        <div class=".col-sm-">
+                            <div class="container">
+                                {% if (event.author == current_user) %}
+                                <button class="btn btn-outline-danger border-0 mb-1 mt-0 p-1 font-weight-bold"
+                                    type="submit" onclick="delete_event('{{ event.id }}')">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2 class="article-title">{{ event.title }}</h2>
+                <p class="article-content text-dark">{{ event.content }}</p>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+
+    {#deactivate Account model#}
+    <div class="modal fade" id="deactivateAccount" tabindex="-1" role="dialog" aria-labelledby="deactivateAccountLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteUserLabel">Deactivate Your Account?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <form method="POST" action="">
+                        <button type="submit" class="btn btn-primary">Deactivate</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#delete Account model#}
+    <div class="modal fade" id="deleteAccount" tabindex="-1" role="dialog" aria-labelledby="deleteAccountLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteUserLabel">Delete Your Account?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    All of your data and activities will be deleted. Are you sure?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <form method="POST" action="">
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='scripts/new_event.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/delete_event.js') }}"></script>
+{% endblock %}

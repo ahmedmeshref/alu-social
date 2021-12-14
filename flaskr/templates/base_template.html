@@ -5,7 +5,9 @@
     <meta charset="utf-8">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home_style.css') }}">
+    {% block css %}{% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'>
@@ -26,7 +28,7 @@
         <div class="items-holder">
             <ul onclick="changeActive(event)">
                 <li>
-                    <a href="#">
+                    <a href="{{ url_for('main.chat') }}" class="{% if active == 'chat' %} active {% endif %}">
                         <i style="font-size:24px" class="fa">&#xf075;</i>
                         <span>Messages</span>
                     </a>
@@ -62,13 +64,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/profile/{{current_user.id}}" class="{% if active == 'profile' %} active {% endif %}">
                         <i class="material-icons">&#xe7fc;</i>
                         <span>Profile</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ url_for('main.logout') }}" style="margin-top: 95%;">
+                    <a href="{{ url_for('main.logout') }}" style="margin-top: 15%;">
                         <i style="font-size:24px" class="fa">&#xf08b;</i>
                         <span>Logout</span>
                     </a>

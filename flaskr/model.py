@@ -60,7 +60,7 @@ class Job(db.Model):
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
     deadline = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    application_link = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    application_link = db.Column(db.Text, nullable=False, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
@@ -78,7 +78,7 @@ db.session.add(alu)
 db.session.add(alc)
 db.session.commit()
 ------
-cs = Major(name='Global Challenges', author=alu)
+cs = Major(name='Computer Science', author=alu)
 gc = Major(name='Global Challenges', author=alu)
 en = Major(name="entrepreneurship", author=alu)
 ib = Major(name="international business and trade", author=alu)

@@ -1,9 +1,11 @@
+from os import major
+from threading import active_count
 from typing import final
 from flask import render_template, request, Blueprint, redirect, url_for, flash, jsonify, abort
 from flask_login import current_user, login_required, login_user, logout_user
 from datetime import datetime
 from sqlalchemy import desc
-from flaskr.model import User, Major, Campus, Event, Job
+from flaskr.model import Group, User, Major, Campus, Event, Job
 from flaskr import db, login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -18,7 +20,10 @@ def load_user(user_id):
 
 @main.get("/")
 def index():
-    return render_template("index.html")
+    majors = Major.query.all()
+    campuses = Campus.query.all()
+    groups = Group.query.all()
+    return render_template("index.html", groups=groups, majors=majors, campuses=campuses)
 
 
 @main.get("/home")
@@ -44,18 +49,25 @@ def register():
     name = request.form.get("username")
     email = request.form.get("email")
     password = request.form.get("password")
+    group_id = request.form.get("group")
+    major_id = request.form.get("major")
+    campus_id = request.form.get("campus")
     hash_password = generate_password_hash(password, method="sha256")
     if User.query.filter_by(email=email).first():
         flash("Account with the same email already exists.", "danger")
         return redirect(url_for("main.index"))
-    user = User(username=name, email=email, password=hash_password,
-                group_id=2, major_id=1, campus_id=1)
-    db.session.add(user)
-    db.session.commit()
-    login_user(user)
-    if request.args.get("next"):
-        return redirect(request.args.get("next"))
-    return redirect(url_for("main.home"))
+    try:
+        user = User(username=name, email=email, password=hash_password,
+                    group_id=int(group_id), major_id=int(major_id), campus_id=int(campus_id))
+        db.session.add(user)
+        db.session.commit()
+        login_user(user)
+        if request.args.get("next"):
+            return redirect(request.args.get("next"))
+        return redirect(url_for("main.home"))
+    except:
+        flash("Invalid singup attempt.", "danger")
+        return redirect(url_for("main.index"))
 
 
 @main.post("/login")
@@ -149,10 +161,12 @@ def new_job():
     description = request.get_json()['description']
     app_link = request.get_json()['application_link']
     deadline = datetime.strptime(request.get_json()['deadline'], '20%y-%m-%d')
+    print(title, app_link)
 
     try:
         job = Job(title=title, content=description,
                   author=current_user, deadline=deadline, application_link=app_link)
+        print(job)
         db.session.add(job)
         db.session.commit()
         return jsonify({
@@ -190,8 +204,47 @@ def delete_job():
     return data
 
 
+@main.get("/profile/<user_id>")
+@login_required
+def profile(user_id):
+    # check if profile with the provided id exists
+    user = User.query.get_or_404(user_id)
+    # get the user posted events
+    events = Event.query.filter_by(author=user).order_by(desc(Event.date)).all()
+    return render_template("profile.html", title=f"profile - {user.username}", events=events,
+                           now=datetime.now().strftime("%Y-%m-%d %H:%M:%S"), datetime=datetime, user=user, active='profile')
+
+@main.get("/chat")
+@login_required
+def chat():
+    return render_template("chat.html", active='chat')
+
+
 @login_manager.unauthorized_handler
 def unauthorized():
     flash("You are not authorized to access the content!", "danger")
     logout_user()
     return redirect(url_for("main.index"))
+
+
+@main.route("/profile/update", methods=['POST', 'GET'])
+@login_required
+def update_profile():
+    # check if the given user_id exist
+    user = current_user
+    if request.method == 'POST':
+        username = request.form.get("username")
+        group_id = request.form.get("group")
+        major_id = request.form.get("major")
+        campus_id = request.form.get("campus")
+        user.username = username
+        user.group_id = int(group_id)
+        user.major_id=int(major_id)
+        user.campus_id=int(campus_id)
+        db.session.commit()
+        return redirect('/home')
+
+    majors = Major.query.all()
+    campuses = Campus.query.all()
+    groups = Group.query.all()
+    return render_template("update_profile.html", title="Update Profile", majors=majors, campuses=campuses, groups=groups)

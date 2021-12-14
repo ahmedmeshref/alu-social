@@ -6,14 +6,25 @@
         <div class="card mentor-card" style="max-width: 30%;">
             <img class="card-img-top" src="{{ url_for('static', filename='images/person.jpg')}}" alt="Card image cap">
             <div class="card-body">
-                <h5 class="card-title">{{ user.username }}</h5>
+                <h5 class="card-title">
+                    <a href="/profile/{{ user.id }}">
+                        {{ user.username }}
+                    </a>
+                </h5>
                 <p class="card-text">
                     <i class="fa  fa-briefcase" aria-hidden="true" style="margin-right: 5px;"></i>
                     {{ user.major.name }}
                 </p>
-                <p class="card-text"><small class="text-muted">
-                        <i class="fa  fa-university" aria-hidden="true" style="margin-right: 5px;"></i>
-                        {{ user.campus.name }}</small>
+                <p class="card-text">
+                    <small class="text-muted">
+                        <i class="fa fa-university" aria-hidden="true" style="margin-right: 5px;"></i>
+                        {{ user.campus.name }}
+                    </small>
+                    <span style="margin-right: 50%;"></span>
+                    <small class="text-muted">
+                        <i class="fa fa-graduation-cap" aria-hidden="true" style="margin-right: 5px;"></i>
+                        {{ user.group.name }}
+                    </small>
                 </p>
             </div>
         </div>

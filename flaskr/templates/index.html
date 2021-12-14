@@ -88,6 +88,30 @@
                                 <input type="password" name="password" placeholder="Enter your password" required
                                     autofocus>
                             </div>
+                            <div class="input-box">
+                                <i class="fas fa-university"></i>
+                                <select name="campus" class="options" placeholder='Select Campus' required autofocus>
+                                    {% for campus in campuses %}
+                                        <option value='{{ campus.id }}' name='book'>{{ campus.name }}</option>
+                                    {% endfor %}   
+                                </select>
+                            </div>
+                            <div class="input-box">
+                                <i class="fas fa-graduation-cap"></i>
+                                <select name="group" class="options" placeholder='Select Group' required autofocus>
+                                    {% for group in groups %}
+                                        <option value='{{ group.id }}' name='book'>{{ group.name }}</option>
+                                    {% endfor %}   
+                                </select>
+                            </div>
+                            <div class="input-box">
+                                <i class="fas fa-briefcase"></i>
+                                <select name="major" class="options" placeholder='Select Major' required autofocus>
+                                    {% for major in majors %}
+                                        <option value='{{ major.id }}' name='book'>{{ major.name }}</option>
+                                    {% endfor %}   
+                                </select>
+                            </div>
                             <button class='button btn-form' type='submit'>Sign Up</button>
                             <div class="text sign-up-text">
                                 Already have an account? <label for="flip">Login now</label>
